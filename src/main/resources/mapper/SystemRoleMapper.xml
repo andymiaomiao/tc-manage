@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.opencloud.device.mapper.SystemRoleMapper">
+    <resultMap id="BaseResultMap" type="com.opencloud.device.entity.SystemRole">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="role_id" property="roleId" jdbcType="BIGINT"/>
+        <result column="role_code" property="roleCode" jdbcType="VARCHAR"/>
+        <result column="role_name" property="roleName" jdbcType="VARCHAR"/>
+        <result column="role_desc" property="roleDesc" jdbcType="VARCHAR"/>
+        <result column="role_type" property="roleType" jdbcType="TINYINT"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="is_persist" property="isPersist" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <select id="selectRoleList" resultMap="BaseResultMap">
+        select * from system_role
+    </select>
+
+    <select id="findActionByRole" resultType="com.opencloud.device.security.BaseAuthority">
+        SELECT
+            a.role_id as authority_id,
+            a.role_code as authority,
+            'role' as owner
+        FROM
+            system_user_role AS rp
+            INNER JOIN system_role AS a ON rp.role_id = a.role_id
+        WHERE
+            a.role_id = #{roleId}
+            and a.status = 1
+            and a.role_type=#{roleType}
+
+    </select>
+
+    <select id="selectRoleMenuAllList" resultType="com.opencloud.device.form.res.TenantMenuAllRes">
+      (select
+      t.menu_id as menu_id,
+      t.menu_name as menu_name,
+      t.parent_id,
+      t.level,
+      t.priority as sort
+      from system_menu t
+      where
+        t.menu_type=#{roleType}
+      order by t.priority desc)
+      union all
+      (select
+      t2.action_id as menu_id,
+      t2.action_name as menu_name,
+      t2.menu_id as parent_id,
+      t8.level+1 as level,
+      t8.priority as sort
+      from system_action t2
+      inner join system_menu t8 on t2.menu_id=t8.menu_id
+      where
+        t8.menu_type=#{roleType}
+      order by t8.priority desc)
+    </select>
+
+    <select id="selectRoleMenuAuthorityList" resultType="com.opencloud.device.form.res.TenantMenuAllRes">
+      (select
+      t.menu_id,
+      t.parent_id
+      from system_menu t
+      inner join system_role_menu t4 on t.menu_id=t4.menu_id
+      inner join system_role t5 on t4.role_id=t5.role_id
+      where
+        t5.role_type=#{roleType}
+        and t5.role_id=#{roleId}
+        and t.menu_type=#{roleType}
+      order by t.priority desc)
+      union all
+      (select
+      t2.action_id as menu_id,
+      t2.menu_id as parent_id
+      from system_action t2
+      inner join system_role_action t6 on t2.action_id=t6.action_id
+      inner join system_role t7 on t6.role_id=t7.role_id
+      inner join system_menu t8 on t2.menu_id=t8.menu_id
+      where
+        t7.role_type=#{roleType}
+        and t7.role_id=#{roleId}
+        and t8.menu_type=#{roleType}
+      order by t8.priority desc)
+    </select>
+
+    <select id="selectCustRoleMenuAllList" resultType="com.opencloud.device.form.res.TenantMenuAllRes">
+      (select
+      t.menu_id as menu_id,
+      t.menu_name as menu_name,
+      t.parent_id,
+      t.level,
+      t.priority as sort
+      from system_menu t
+      where
+        t.menu_type=#{roleType}
+      order by t.priority desc)
+      union all
+      (select
+      t2.action_id as menu_id,
+      t2.action_name as menu_name,
+      t2.menu_id as parent_id,
+      t8.level+1 as level,
+      t8.priority as sort
+      from system_action t2
+      inner join system_menu t8 on t2.menu_id=t8.menu_id
+      where
+        t8.menu_type=#{roleType}
+      order by t8.priority desc)
+    </select>
+
+    <select id="selectCustRoleMenuAuthorityList" resultType="com.opencloud.device.form.res.TenantMenuAllRes">
+      (select
+      t.menu_id,
+      t.parent_id
+      from system_menu t
+      inner join system_role_menu t4 on t.menu_id=t4.menu_id
+      inner join system_role t5 on t4.role_id=t5.role_id
+      where
+        t5.role_type=#{roleType}
+        and t5.role_id=#{roleId}
+        and t.menu_type=#{roleType}
+      order by t.priority desc)
+      union all
+      (select
+      t2.action_id as menu_id,
+      t2.menu_id as parent_id
+      from system_action t2
+      inner join system_role_action t6 on t2.action_id=t6.action_id
+      inner join system_role t7 on t6.role_id=t7.role_id
+      inner join system_menu t8 on t2.menu_id=t8.menu_id
+      where
+        t7.role_type=#{roleType}
+        and t7.role_id=#{roleId}
+        and t8.menu_type=#{roleType}
+      order by t8.priority desc)
+    </select>
+
+    <select id="selectSystemRoleByUserIdAndTenant" resultType="integer">
+      select
+      count(*)
+      from system_role t
+      inner join system_user_role t0 on t.role_id=t0.role_id
+      inner join system_user t1 on t1.user_id=t0.user_id
+      <where>
+          <if test="userList!=null and userList.size()>0">
+              and t1.user_id in
+              <foreach collection="userList" open="(" close=")" separator="," item="item">
+                  #{item}
+              </foreach>
+          </if>
+          and t1.userId = #{userType}
+          and t.is_system = 1
+      </where>
+
+    </select>
+</mapper>

@@ -1,0 +1,168 @@
+server:
+    port: 9985
+spring:
+    application:
+        name: iot-manage
+#    cloud:
+#        sentinel:
+#            transport:
+#                dashboard: localhost:8680
+#            eager: true
+        #手动配置Bus id,
+#        bus:
+#            id: ${spring.application.name}:${server.port}
+#        nacos:
+#            config:
+#                namespace: ${config.namespace}
+#                refreshable-dataids: common.properties
+#                server-addr: ${config.server-addr}
+#                shared-dataids: common.properties,redis.properties,mqtt.yml
+#                #,device-db.properties
+#                #,db.properties,
+#                # device-db.properties,
+#                #,rabbitmq.properties
+#            discovery:
+#                namespace: ${config.namespace}
+#                server-addr: ${discovery.server-addr}
+    main:
+        allow-bean-definition-overriding: true
+    #解决restful 404错误 spring.mvc.throw-exception-if-no-handler-found=true spring.resources.add-mappings=false
+    mvc:
+        throw-exception-if-no-handler-found: true
+    resources:
+        add-mappings: false
+    profiles:
+        active: dev
+#      ${profile.name}
+    servlet:
+        multipart:
+            max-file-size: 900MB
+            max-request-size: 1000MB
+            enabled: true
+
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        type: com.alibaba.druid.pool.DruidDataSource
+        url: jdbc:mysql://${DB_HOST}:3306/${DB_NAME}?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+        username: ${DB_USER}
+        password: ${DB_PASSWORD}
+
+    redis:
+        host: ${REDIS_HOST}
+        port: 6379
+
+management:
+    endpoints:
+        web:
+            exposure:
+                include: '*'
+
+cloud:
+    swagger2:
+        enabled: true
+        description: 商城管理服务
+        title: 商城管理服务
+    social:
+        client:
+            device:
+                client-id: dwojp2egdmjc9z69s4k51zr4
+                client-secret: 26nzfpctucxdi1eexo5jkbhcsfr4pm7j
+#                oauth-url: http://192.168.0.123:8211/oauth/token
+#mybatis plus 设置
+mybatis-plus:
+ #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: com.opencloud.**.entity
+  mapperLocations: classpath:mapper/*.xml
+  global-config:
+    # 数据库相关配置
+    db-config:
+      #字段策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断"),NOT_EMPTY:"非空判断"
+      update-strategy: not_null
+#  global-config:
+#      #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"全局唯一ID UUID";
+#      id-type: 3
+#      #机器 ID 部分(影响雪花ID)
+#      workerId: 1
+#      #数据标识 ID 部分(影响雪花ID)(workerId 和 datacenterId 一起配置才能重新初始化 Sequence)
+#      datacenterId: 18
+
+
+##自定义应用开关
+# mqtt.enabled=true
+##mqtt服务器地址 使用本机中docker容器提供的mqtt服务
+# mqtt.host=tcp://localhost:1883
+##mqtt服务用户名 当前未配置
+# mqtt.username=
+##mqtt服务用户密码 当前未配置
+# mqtt.pwd=
+oss:
+    socket:
+        trace:
+            host: ${IPADDR}
+            port: 9224
+        save:
+            host: ${IPADDR}
+            port: 9223
+mqtt:
+    enabled: true
+    host: ${MQTT_HOST}
+    username: ''
+    topArray: v1/camera/info/device2cloud,v1/camera/soft/device2cloud,v1/camera/alarm/device2cloud,v1/camera/log/device2cloud
+
+#    toplist:
+#     - v1/camera/#
+#        - v1/camera/info/device2cloud #设备信息上报
+#        - v1/camera/soft/device2cloud #版本文件传输进度上报
+#        - v1/camera/alarm/device2cloud #告警问题处理结果通知
+
+
+
+storage:
+    rename: true
+
+    todisk: true
+    toqiniu: false
+    toalioss: false
+    tofastdfs: false
+    tomongodb: false
+    toseaweedfs: false
+    downloadurl: http://${IPADDR}:9985/file/download/
+    imageurl: http://${IPADDR}:9985/file/image/
+    disk:
+        prefix: http://localhost:9091/files/
+        downloadto: d://downloadfile//
+        location: /Users/jihao/java-project/upload
+    qiniu:
+        prefix: http://pbby0yzdu.bkt.clouddn.com/
+        ak: _IAafy8aX5x7h-4FBEvH2DqCtTq2c7sESPSlfGgI
+        sk: _8hy2LE6kfTKr3wDUWJONgFRxPKX4cDQhi79Bj3Y
+        bucket: xytalk
+
+    # mongodb.gridfs\u914d\u7f6e     #
+    gridfs:
+        host: 127.0.0.1
+        dbname: xyfs
+        port: 27017
+        collectionname: fs
+    # fastDFS \u914d\u7f6e     #
+    fastdfs:
+        connecttimeout: 5
+        network_timeout: 10
+        charset: UTF-8
+        trackerhttpport: 80
+        antistealtoken: no
+        secret_key: 1234567890
+        trackerserver: 192.168.17.112:22122
+
+    # SeaweedFS \u914d\u7f6e     #
+    seaweedf:
+        shost: localhost
+        sport: 9333
+        stimeout: 10
+    # ali OSS \u914d\u7f6e     #
+    ali:
+        endpoint: oss-cn-shenzhen.aliyuncs.com
+        accesskeyid: LTAITVVqBncEC\u5565
+        accesskeysecret: 9WVDXSfnPU3cFuckuPphXC4GX\u5565\u5565
+        bucketname: xytalk
+        downloadkey: xytalk

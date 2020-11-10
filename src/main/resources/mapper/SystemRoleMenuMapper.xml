@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.opencloud.device.mapper.SystemRoleMenuMapper">
+    <insert id="batchGrantRoleMenu">
+        insert into system_role_menu(menu_id,role_id)
+        select menu_id,#{roleId}
+        from system_menu
+        <where>
+            <if test="menuIds!=null and menuIds.size()>0">
+                menu_id
+                <foreach collection="menuIds" open="in (" close=")" item="item" separator=",">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </insert>
+</mapper>

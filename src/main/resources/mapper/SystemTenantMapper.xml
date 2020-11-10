@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.opencloud.device.mapper.SystemTenantMapper">
+    <resultMap id="BaseResultMap" type="com.opencloud.device.entity.SystemTenant">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <!--<id column="action_id" property="actionId" jdbcType="BIGINT"/>-->
+        <!--<result column="authority_id" property="apiId" jdbcType="BIGINT"/>-->
+    </resultMap>
+    <select id="selectTenantMenuAllList" resultType="com.opencloud.device.form.res.TenantMenuAllRes">
+      (select
+      t.menu_id as menu_id,
+      t.menu_name as menu_name,
+      t.parent_id,
+      t.level
+      from system_menu t
+      inner join system_role_menu t4 on t.menu_id=t4.menu_id
+      inner join system_role t5 on t4.role_id=t5.role_id
+      where
+        t5.role_type=#{tenantType}
+        and t.menu_type=#{tenantType}
+      order by t.priority)
+      union all
+      (select
+      t2.action_id as menu_id,
+      t2.action_name as menu_name,
+      t2.menu_id as parent_id,
+      t8.level+1 as level
+      from system_action t2
+      inner join system_role_action t6 on t2.action_id=t6.action_id
+      inner join system_role t7 on t6.role_id=t7.role_id
+      inner join system_menu t8 on t2.menu_id=t8.menu_id
+      where
+        t7.role_type=#{tenantType}
+        and t8.menu_type=#{tenantType}
+      order by t8.priority)
+    </select>
+
+    <select id="selectTenantMenuGrantList" resultType="com.opencloud.device.form.res.TenantMenuAllRes">
+      (select
+      t.menu_id,
+      t.parent_id
+      from system_menu t
+      inner join system_role_menu t4 on t.menu_id=t4.menu_id
+      inner join system_role t5 on t4.role_id=t5.role_id
+      where
+        t5.role_type=#{tenantType}
+        and t.menu_type=#{tenantType}
+      order by t.priority)
+      union all
+      (select
+      t2.action_id as menu_id,
+      t2.menu_id as parent_id
+      from system_action t2
+      inner join system_role_action t6 on t2.action_id=t6.action_id
+      inner join system_role t7 on t6.role_id=t7.role_id
+      inner join system_menu t8 on t2.menu_id=t8.menu_id
+      where
+        t7.role_type=#{tenantType}
+        and t8.menu_type=#{tenantType}
+      order by t8.priority)
+    </select>
+</mapper>

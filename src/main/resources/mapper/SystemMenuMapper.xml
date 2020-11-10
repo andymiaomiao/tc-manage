@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.opencloud.device.mapper.SystemMenuMapper">
+    <resultMap id="BaseResultMap" type="com.opencloud.device.entity.SystemMenu">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="menu_id" property="menuId" jdbcType="BIGINT"/>
+        <result column="menu_code" property="menuCode" jdbcType="VARCHAR"/>
+        <result column="menu_name" property="menuName" jdbcType="VARCHAR"/>
+        <result column="menu_type" property="menuType" jdbcType="INTEGER"/>
+        <result column="icon" property="icon" jdbcType="VARCHAR"/>
+        <result column="parent_id" property="parentId" jdbcType="BIGINT"/>
+        <result column="scheme" property="scheme" jdbcType="VARCHAR"/>
+        <result column="target" property="target" jdbcType="VARCHAR"/>
+        <result column="path" property="path" jdbcType="VARCHAR"/>
+        <result column="priority" property="priority" jdbcType="INTEGER"/>
+        <result column="menu_desc" property="menuDesc" jdbcType="VARCHAR"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="is_persist" property="isPersist" jdbcType="INTEGER"/>
+        <result column="level" property="level" jdbcType="INTEGER"/>
+        <result column="cache" property="cache" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <select id="findMenuByUser" resultMap="BaseResultMap">
+      select
+      t0.*
+      from system_menu t0
+      inner join system_role_menu t1 on t0.menu_id=t1.menu_id
+      inner join system_role t2 on t1.role_id=t2.role_id
+      inner join system_user_role t3 on t2.role_id=t3.role_id
+      inner join system_user t4 on t4.user_id=t3.user_id
+      where t3.user_id=#{map.userId}
+      and t4.type=#{map.userType}
+      and t0.menu_type=#{map.menuType}
+      and t2.role_type=#{map.roleType}
+
+    </select>
+
+    <select id="findCustMenuByUser" resultMap="BaseResultMap">
+      select
+      t0.*
+      from system_menu t0
+      inner join system_role_menu t1 on t0.menu_id=t1.menu_id
+      inner join system_role t2 on t1.role_id=t2.role_id
+      inner join system_user_role t3 on t2.role_id=t3.role_id
+      inner join system_user t4 on t4.user_id=t3.user_id
+      where t3.user_id=#{map.userId}
+      and t4.type=#{map.userType}
+      and t0.menu_type=#{map.menuType}
+      and t2.role_type=#{map.roleType}
+    </select>
+</mapper>

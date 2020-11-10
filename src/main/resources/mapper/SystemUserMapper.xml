@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.opencloud.device.mapper.SystemUserMapper">
+    <resultMap id="BaseResultMap" type="com.opencloud.device.entity.SystemUser">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="user_id" jdbcType="BIGINT" property="userId"/>
+        <result column="user_name" jdbcType="VARCHAR" property="userName"/>
+        <result column="nick_name" jdbcType="VARCHAR" property="nickName"/>
+        <result column="avatar" jdbcType="VARCHAR" property="avatar"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="mobile" jdbcType="VARCHAR" property="mobile"/>
+        <result column="tenant_id" jdbcType="BIGINT" property="tenantId"/>
+        <result column="user_type" jdbcType="VARCHAR" property="userType"/>
+        <result column="user_desc" jdbcType="VARCHAR" property="userDesc"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="status" property="status" jdbcType="TINYINT"/>
+    </resultMap>
+    <!-- 表名 -->
+    <sql id="t_name">system_user</sql>
+    <!-- 别名 -->
+    <sql id="t_alias">system_user as u</sql>
+    <!--外键表关联定义 -->
+    <sql id="join">
+
+    </sql>
+    <!-- 自定义分页 -->
+    <select id="pageList" resultType="com.opencloud.device.mybatis.EntityMap">
+        select ${ew.select} FROM
+        <include refid="t_alias"/>
+        <include refid="join"/>
+        ${ew.customSqlSegment}
+    </select>
+
+
+
+    <select id="selectUserPage" resultType="map">
+        select
+        t.user_id as userId,
+        t.user_name as userName,
+        t.nick_name as nickName,
+        t.email,
+        t.avatar,
+        t.mobile,
+        t.user_type as userType,
+        t.user_desc as userDesc,
+        t.status,
+        t.create_time as createTime,
+        t.update_time as updateTime,
+        t3.account,
+        t2.role_name as roleName,
+        t2.is_system as isSystem
+        from system_user t
+        left join system_user_role t1 on t.user_id=t1.user_id
+        left join system_role t2 on t1.role_id=t2.role_id and t2.role_type=#{map.type}
+        inner join system_account t3 on t.account_id=t3.account_id
+        <where>
+            t.type=#{map.type}
+            <trim prefix="and (" suffix=")" prefixOverrides="AND |OR ">
+                <if test="map.userName!=null and map.userName!=''">
+                    or t.user_name like CONCAT('%',#{map.userName},'%')
+                </if>
+                <if test="map.email!=null and map.email!=''">
+                    or t.email like  CONCAT('%',#{map.email},'%')
+                </if>
+                <if test="map.mobile!=null and map.mobile!=''">
+                    or t.mobile like  CONCAT('%',#{map.mobile})
+                </if>
+                <if test="map.account!=null and map.account!=''">
+                    or t3.account like  CONCAT('%',#{map.account})
+                </if>
+            </trim>
+        </where>
+        order by t.create_time desc
+    </select>
+
+    <select id="selectAdminUserPage" resultType="map">
+        select
+        t.user_id as userId,
+        t.user_name as userName,
+        t.nick_name as nickName,
+        t.email,
+        t.avatar,
+        t.mobile,
+        t.user_type as userType,
+        t.user_desc as userDesc,
+        t.status,
+        t.create_time as createTime,
+        t.update_time as updateTime,
+        t3.account,
+        t2.role_name as roleName,
+        t2.is_system as isSystem
+        from system_user t
+        left join system_user_role t1 on t.user_id=t1.user_id
+        left join system_role t2 on t1.role_id=t2.role_id
+        inner join system_account t3 on t.account_id=t3.account_id
+        <where>
+            t2.is_system=1
+            <if test="map.userName!=null and map.userName!=''">
+                and t.user_name like CONCAT('%',#{map.userName},'%')
+            </if>
+            <if test="map.email!=null and map.email!=''">
+                and t.email like  CONCAT('%',#{map.email},'%')
+            </if>
+            <if test="map.mobile!=null and map.mobile!=''">
+                and t.mobile like  CONCAT('%',#{map.mobile})
+            </if>
+            <if test="map.account!=null and map.account!=''">
+                and t3.account like  CONCAT('%',#{map.account})
+            </if>
+        </where>
+        order by t.create_time desc
+    </select>
+</mapper>
