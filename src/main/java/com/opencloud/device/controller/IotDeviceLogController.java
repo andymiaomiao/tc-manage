@@ -12,7 +12,7 @@ import com.opencloud.device.model.DeviceConstants;
 import com.opencloud.device.model.MqttEnum;
 import com.opencloud.device.model.PageParams;
 import com.opencloud.device.model.ResultBody;
-import com.opencloud.device.mqtt.MqttMessageSender;
+//import com.opencloud.device.mqtt.MqttMessageSender;
 import com.opencloud.device.properties.DeviceManageProperties;
 import com.opencloud.device.security.SecurityHelper;
 import com.opencloud.device.security.ServerConfiguration;
@@ -49,7 +49,7 @@ public class IotDeviceLogController {
 
     private IotDeviceLogService iotDeviceLogService;
 
-    private MqttMessageSender mqttMessageSender;
+//    private MqttMessageSender mqttMessageSender;
 
     private DiskFileService diskFileService;
 
@@ -131,7 +131,7 @@ public class IotDeviceLogController {
             jsonObject.put("port",deviceManageProperties.getSave().getPort());
             System.out.println(deviceManageProperties.getSave().getPort());
             jsonObject.put("msgcode", DeviceConstants.DEVICE_CHANNL_3001);
-            mqttMessageSender.sendToMqtt(DeviceConstants.CLOUD_DEVICE_LOG + deviceSn, jsonObject.toJSONString());
+//            mqttMessageSender.sendToMqtt(DeviceConstants.CLOUD_DEVICE_LOG + deviceSn, jsonObject.toJSONString());
         }
         return ResultBody.ok();
     }

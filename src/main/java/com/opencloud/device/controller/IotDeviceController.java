@@ -16,7 +16,7 @@ import com.opencloud.device.entity.*;
 import com.opencloud.device.form.req.DeviceBatchRes;
 import com.opencloud.device.listener.IotDeviceListener;
 import com.opencloud.device.model.*;
-import com.opencloud.device.mqtt.MqttMessageSender;
+//import com.opencloud.device.mqtt.MqttMessageSender;
 import com.opencloud.device.properties.DeviceManageProperties;
 import com.opencloud.device.security.SecurityHelper;
 import com.opencloud.device.security.ServerConfiguration;
@@ -58,7 +58,7 @@ public class IotDeviceController{
 
     private ServerConfiguration serverConfiguration;
 
-    private MqttMessageSender mqttMessageSender;
+//    private MqttMessageSender mqttMessageSender;
 
     private IotDeviceService iotDeviceService;
 
@@ -173,10 +173,13 @@ public class IotDeviceController{
     @PostMapping("/device/save")
     public ResultBody<Long> save(
             @RequestParam(value = "deviceId") Long deviceId,
-            @RequestParam(value = "distribuId") Long distribuId,
-            @RequestParam(value = "categoryId") Long categoryId,
+//            @RequestParam(value = "distribuId") Long distribuId,
+//            @RequestParam(value = "categoryId") Long categoryId,
             @RequestParam(value = "categoryName", required = false) String categoryName,
             @RequestParam(value = "deviceName") String deviceName,
+            @RequestParam(value = "deviceBug") String deviceBug,
+            @RequestParam(value = "deviceNew") String deviceNew,
+            @RequestParam(value = "deviceRom") String deviceRom,
             @RequestParam(value = "deviceIp", required = false) String deviceIp,
             @RequestParam(value = "deviceSn") String deviceSn,
             @RequestParam(value = "protocol", required = false) String protocol,
@@ -199,10 +202,13 @@ public class IotDeviceController{
             @RequestParam(value = "simCard", defaultValue = "1", required = false) Integer simCard
     ) {
         IotDevice device = new IotDevice();
+        device.setDeviceBug(deviceBug);
+        device.setDeviceNew(deviceNew);
+        device.setDeviceRom(deviceRom);
         device.setDeviceId(deviceId);
-        device.setCategoryId(categoryId);
+//        device.setCategoryId(categoryId);
         device.setCategoryName(categoryName);
-        device.setDistribuId(distribuId);
+//        device.setDistribuId(distribuId);
         device.setDeviceName(deviceName);
         device.setDeviceIp(deviceIp);
         device.setDeviceSn(deviceSn);
@@ -294,7 +300,7 @@ public class IotDeviceController{
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("id", IdWorker.getIdStr());
         jsonObject.put("msgcode", DeviceConstants.DEVICE_CHANNL_1001);
-        mqttMessageSender.sendToMqtt(DeviceConstants.CLOUD_DEVICE_INFO + deviceSn, jsonObject.toJSONString());
+//        mqttMessageSender.sendToMqtt(DeviceConstants.CLOUD_DEVICE_INFO + deviceSn, jsonObject.toJSONString());
         return ResultBody.ok();
     }
 
@@ -343,7 +349,7 @@ public class IotDeviceController{
             jsonObject.put("msg", DeviceConstants.DEVICE_CHANNL_2001);
             jsonObject.put("msgbody", jsonObjects);
             log.info(jsonObject.toJSONString());
-            mqttMessageSender.sendToMqtt(DeviceConstants.CLOUD_DEVICE_SOFT + deviceSn, jsonObject.toJSONString());
+//            mqttMessageSender.sendToMqtt(DeviceConstants.CLOUD_DEVICE_SOFT + deviceSn, jsonObject.toJSONString());
         }
         JSONArray jsonArray = new JSONArray();
         JSONObject jsonObject = new JSONObject();

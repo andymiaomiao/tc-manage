@@ -32,6 +32,9 @@ public class IotDevice extends AbstractEntity {
     private String categoryName;
     private String deviceName;
     private String deviceIp;
+    private String deviceNew;
+    private String deviceBug;
+    private String deviceRom;
     private String deviceSn;
     private String protocol;
     private Integer online;

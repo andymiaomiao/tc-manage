@@ -98,7 +98,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         log.info("jackson2HttpMessageConverter处理(空值,Long)数据转换。注:@EnableResourceServer(资源服务器)生效。无@EnableResourceServer(普通微服务)无效", jackson2HttpMessageConverter);
         return new HttpMessageConverters(jackson2HttpMessageConverter);
     }
-
+//
 //    /**
 //     * 多个WebSecurityConfigurerAdapter
 //     */
@@ -113,9 +113,13 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 //                    "/v2/api-docs/**",
 //                    "/swagger-resources/**",
 //                    "/webjars/**",
-//                    "/favicon.ico");
+//                    "/favicon.ico")
+//                    .antMatchers("/login/**","/file/**")
+//                    .antMatchers("/v2/api-docs", "/swagger-resources/configuration/ui",
+//                            "/swagger-resources","/swagger-resources/configuration/security",
+//                            "/swagger-ui.html","/course/coursebase/**"  ,"/api/**");
 //        }
-//
+
 //        /**
 //         * 默认安全配置
 //         * @param http
@@ -148,6 +152,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 //        registry.addResourceHandler("/webjars/**")
 //                .addResourceLocations("classpath:/META-INF/resources/webjars/");
 //    }
-
+//
 
 }
