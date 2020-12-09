@@ -16,6 +16,7 @@ import java.util.Map;
  * @date 2020-07-18 10:43
  */
 public interface DiskFileService extends IBaseService<DiskFile> {
+
     IPage<DiskFile> findPage(PageParams pageParams);
 
     void removeBatch(List<Map<String, Object>> fileList);

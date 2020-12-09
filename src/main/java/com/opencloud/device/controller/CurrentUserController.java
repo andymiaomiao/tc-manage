@@ -77,7 +77,7 @@ public class CurrentUserController {
         user.setEmail(email);
         user.setCity(city);
         user.setUserDesc(userDesc);
-        systemUserService.save(user);
+        systemUserService.update(user);
         baseUserDetails.setNickName(nickName);
         SecurityHelper.updateUser(redisTokenStore, baseUserDetails);
         return ResultBody.ok();

@@ -60,5 +60,4 @@ public interface IotDeviceDistributionService extends IBaseService<IotDeviceDist
      */
     void remove(Long distributionId);
 
-//    List<IotDeviceDistribution> findMenuByUser(Map<String,Object> paramMap);
 }

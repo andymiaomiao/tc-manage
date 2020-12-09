@@ -152,14 +152,14 @@ public class SystemUserServiceImpl extends BaseServiceImpl<SystemUserMapper, Sys
      * @return
      */
     @Override
-    public void update(SystemUser systemUser) {
+    public Boolean update(SystemUser systemUser) {
         if (systemUser == null || systemUser.getUserId() == null) {
-            return;
+            return false;
         }
         if (systemUser.getStatus() != null) {
             systemAccountService.updateStatusById(systemUser.getAccountId(), ACCOUNT_DOMAIN, systemUser.getStatus());
         }
-        updateById(systemUser);
+        return updateById(systemUser);
     }
 
     /**

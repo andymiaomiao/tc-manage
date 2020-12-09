@@ -46,7 +46,7 @@ public interface SystemUserService extends IBaseService<SystemUser> {
      * @param systemUser
      * @return
      */
-    void update(SystemUser systemUser);
+    Boolean update(SystemUser systemUser);
 
     /**
      * 删除用户
