@@ -119,7 +119,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 //                            "/swagger-resources","/swagger-resources/configuration/security",
 //                            "/swagger-ui.html","/course/coursebase/**"  ,"/api/**");
 //        }
-
+//
 //        /**
 //         * 默认安全配置
 //         * @param http
@@ -137,8 +137,8 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 //                    .csrf().disable();
 //        }
 //    }
-
-
+//
+//
 //    /**
 //     * 资源处理器
 //     *
@@ -152,6 +152,6 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
 //        registry.addResourceHandler("/webjars/**")
 //                .addResourceLocations("classpath:/META-INF/resources/webjars/");
 //    }
-//
+
 
 }

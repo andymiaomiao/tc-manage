@@ -23,7 +23,7 @@
         <hutool.version>4.6.1</hutool.version>
         <com.google.zxing.version>3.1.0</com.google.zxing.version>
         <swagger2.version>2.9.2</swagger2.version>
-        <swagger-bootstrap-ui.version>1.9.5</swagger-bootstrap-ui.version>
+        <swagger-bootstrap-ui.version>2.9.2</swagger-bootstrap-ui.version>
         <oracle.version>10.2.0.4.0</oracle.version>
         <feign-httpclient.version>10.6.0</feign-httpclient.version>
         <opencloud.version>3.0.0</opencloud.version>
@@ -101,10 +101,21 @@
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatis-plus.version}</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>com.github.drtrang</groupId>-->
-            <!--<artifactId>druid-spring-boot2-starter</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>com.github.xiaoymin</groupId>
+            <artifactId>swagger-bootstrap-ui</artifactId>
+            <version>1.9.3</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-annotations</artifactId>
+            <version>1.5.22</version>
+        </dependency>
+        <dependency>
+            <groupId>io.swagger</groupId>
+            <artifactId>swagger-models</artifactId>
+            <version>1.5.22</version>
+        </dependency>
         <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>fastjson</artifactId>

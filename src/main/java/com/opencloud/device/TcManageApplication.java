@@ -15,10 +15,10 @@ import org.springframework.context.ApplicationContext;
  */
 @SpringBootApplication
 @MapperScan(basePackages = "com.opencloud.**.mapper")
-public class DeviceManageApplication {
+public class TcManageApplication {
     public static void main(String[] args) {
-        ApplicationContext applicationContext = SpringApplication.run(DeviceManageApplication.class, args);
-        applicationContext.getBean(SocketSaveServer.class).start();//在spring容器启动后，取到已经初始化的SocketServer，启动Socket服务
-        applicationContext.getBean(SocketTraceServer.class).start();//在spring容器启动后，取到已经初始化的SocketServer，启动Socket服务
+        ApplicationContext applicationContext = SpringApplication.run(TcManageApplication.class, args);
+//        applicationContext.getBean(SocketSaveServer.class).start();//在spring容器启动后，取到已经初始化的SocketServer，启动Socket服务
+//        applicationContext.getBean(SocketTraceServer.class).start();//在spring容器启动后，取到已经初始化的SocketServer，启动Socket服务
     }
 }
