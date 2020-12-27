@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.opencloud.device.mapper.SystemMenuMapper">
-    <resultMap id="BaseResultMap" type="com.opencloud.device.entity.SystemMenu">
+<mapper namespace="com.weiqisen.tc.mapper.SystemMenuMapper">
+    <resultMap id="BaseResultMap" type="com.weiqisen.tc.entity.SystemMenu">
         <!--
           WARNING - @mbg.generated
         -->

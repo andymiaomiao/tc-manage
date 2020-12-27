@@ -131,7 +131,7 @@ storage:
     disk:
         prefix: http://localhost:9091/files/
         downloadto: d://downloadfile//
-        location: /Users/jihao/java-project/upload
+        location: /Users/weiqisen/java-project/upload
     qiniu:
         prefix: http://pbby0yzdu.bkt.clouddn.com/
         ak: _IAafy8aX5x7h-4FBEvH2DqCtTq2c7sESPSlfGgI

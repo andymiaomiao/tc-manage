@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.opencloud.device.mapper.SystemRoleUserMapper">
-    <resultMap id="BaseResultMap" type="com.opencloud.device.entity.SystemRoleUser">
+<mapper namespace="com.weiqisen.tc.mapper.SystemRoleUserMapper">
+    <resultMap id="BaseResultMap" type="com.weiqisen.tc.entity.SystemRoleUser">
         <!--
           WARNING - @mbg.generated
         -->
@@ -9,7 +9,7 @@
         <result column="role_id" property="roleId" jdbcType="BIGINT"/>
     </resultMap>
 
-    <select id="selectUsersByRoleId" resultMap="com.opencloud.device.mapper.SystemRoleMapper.BaseResultMap">
+    <select id="selectUsersByRoleId" resultMap="com.weiqisen.tc.mapper.SystemRoleMapper.BaseResultMap">
         SELECT
         system_user_role.user_id,
         system_role.role_id,

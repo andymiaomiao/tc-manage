@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.opencloud.device.mapper.SystemActionMapper">
-    <resultMap id="BaseResultMap" type="com.opencloud.device.entity.SystemAction">
+<mapper namespace="com.weiqisen.tc.mapper.SystemActionMapper">
+    <resultMap id="BaseResultMap" type="com.weiqisen.tc.entity.SystemAction">
         <!--
           WARNING - @mbg.generated
         -->
@@ -17,7 +17,7 @@
         <result column="is_persist" property="isPersist" jdbcType="INTEGER"/>
     </resultMap>
 
-    <select id="selectAuthorityByUser" resultType="com.opencloud.device.security.BaseAuthority">
+    <select id="selectAuthorityByUser" resultType="com.weiqisen.tc.security.BaseAuthority">
         SELECT
             f.api_id as authority_id,
             f.api_code as authority,

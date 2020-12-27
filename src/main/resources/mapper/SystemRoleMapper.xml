@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.opencloud.device.mapper.SystemRoleMapper">
-    <resultMap id="BaseResultMap" type="com.opencloud.device.entity.SystemRole">
+<mapper namespace="com.weiqisen.tc.mapper.SystemRoleMapper">
+    <resultMap id="BaseResultMap" type="com.weiqisen.tc.entity.SystemRole">
         <!--
           WARNING - @mbg.generated
         -->
@@ -20,7 +20,7 @@
         select * from system_role
     </select>
 
-    <select id="findActionByRole" resultType="com.opencloud.device.security.BaseAuthority">
+    <select id="findActionByRole" resultType="com.weiqisen.tc.security.BaseAuthority">
         SELECT
             a.role_id as authority_id,
             a.role_code as authority,
@@ -35,7 +35,7 @@
 
     </select>
 
-    <select id="selectRoleMenuAllList" resultType="com.opencloud.device.form.res.TenantMenuAllRes">
+    <select id="selectRoleMenuAllList" resultType="com.weiqisen.tc.form.res.TenantMenuAllRes">
       (select
       t.menu_id as menu_id,
       t.menu_name as menu_name,
@@ -60,7 +60,7 @@
       order by t8.priority desc)
     </select>
 
-    <select id="selectRoleMenuAuthorityList" resultType="com.opencloud.device.form.res.TenantMenuAllRes">
+    <select id="selectRoleMenuAuthorityList" resultType="com.weiqisen.tc.form.res.TenantMenuAllRes">
       (select
       t.menu_id,
       t.parent_id
@@ -87,7 +87,7 @@
       order by t8.priority desc)
     </select>
 
-    <select id="selectCustRoleMenuAllList" resultType="com.opencloud.device.form.res.TenantMenuAllRes">
+    <select id="selectCustRoleMenuAllList" resultType="com.weiqisen.tc.form.res.TenantMenuAllRes">
       (select
       t.menu_id as menu_id,
       t.menu_name as menu_name,
@@ -112,7 +112,7 @@
       order by t8.priority desc)
     </select>
 
-    <select id="selectCustRoleMenuAuthorityList" resultType="com.opencloud.device.form.res.TenantMenuAllRes">
+    <select id="selectCustRoleMenuAuthorityList" resultType="com.weiqisen.tc.form.res.TenantMenuAllRes">
       (select
       t.menu_id,
       t.parent_id
