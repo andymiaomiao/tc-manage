@@ -4,20 +4,23 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.weiqisen.tc.annotation.OperationLog;
 import com.weiqisen.tc.entity.SystemRole;
 import com.weiqisen.tc.entity.SystemRoleUser;
+import com.weiqisen.tc.form.req.SystemRemoveRoleReq;
+import com.weiqisen.tc.form.req.SystemRoleGrantReq;
+import com.weiqisen.tc.form.req.SystemRoleReq;
+import com.weiqisen.tc.form.req.SystemRoleUserReq;
 import com.weiqisen.tc.model.CommonConstants;
 import com.weiqisen.tc.model.PageParams;
 import com.weiqisen.tc.model.RequestParams;
 import com.weiqisen.tc.model.ResultBody;
+import com.weiqisen.tc.security.SecurityHelper;
 import com.weiqisen.tc.service.SystemRoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.BeanUtils;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -76,41 +79,19 @@ public class SystemRoleController {
     /**
      * 添加/编辑角色
      *
-     * @param roleId   角色ID
-     * @param roleCode 角色编码
-     * @param roleName 角色显示名称
-     * @param roleDesc 描述
-     * @param status   启用禁用
      * @return
      */
     @OperationLog(value = "添加/编辑角色")
     @ApiOperation(value = "添加/编辑角色", notes = "添加/编辑角色")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "roleId", value = "角色ID", defaultValue = "", paramType = "form"),
-            @ApiImplicitParam(name = "roleCode", value = "角色编码", defaultValue = "", required = true, paramType = "form"),
-            @ApiImplicitParam(name = "roleName", value = "角色显示名称", defaultValue = "", required = true, paramType = "form"),
-            @ApiImplicitParam(name = "roleType", value = "角色平台类型", defaultValue = "10", required = true, paramType = "form"),
-            @ApiImplicitParam(name = "roleDesc", value = "描述", defaultValue = "", paramType = "form"),
-            @ApiImplicitParam(name = "status", required = true, defaultValue = "1", allowableValues = "0,1", value = "是否启用", paramType = "form")
-    })
     @PostMapping("/role/save")
     public ResultBody save(
-            @RequestParam(value = "roleId", required = false) Long roleId,
-            @RequestParam(value = "roleCode") String roleCode,
-            @RequestParam(value = "roleName") String roleName,
-            @RequestParam(value = "roleType",defaultValue = "10") Integer roleType,
-            @RequestParam(value = "roleDesc", required = false) String roleDesc,
-            @RequestParam(value = "status", defaultValue = "1", required = false) Integer status
+            @RequestBody SystemRoleReq systemRoleReq
     ) {
         SystemRole role = new SystemRole();
-        role.setRoleId(roleId);
-        role.setRoleCode(roleCode);
-        role.setRoleName(roleName);
-        role.setRoleType(roleType);
-        role.setStatus(status);
-        role.setRoleDesc(roleDesc);
+        BeanUtils.copyProperties(systemRoleReq, role);
+        role.setTenantId(SecurityHelper.getUser().getTenantId());
         SystemRole add = null;
-        if(roleId!=null){
+        if(role.getRoleId()!=null){
             add = systemRoleService.update(role);
         }else {
             add = systemRoleService.add(role);
@@ -122,35 +103,28 @@ public class SystemRoleController {
     /**
      * 删除角色
      *
-     * @param roleId
      * @return
      */
     @ApiOperation(value = "删除角色", notes = "删除角色")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "roleId", value = "角色ID", defaultValue = "", required = true, paramType = "form")
-    })
     @PostMapping("/role/remove")
     public ResultBody remove(
-            @RequestParam(value = "roleId") Long roleId
+            @RequestBody SystemRemoveRoleReq systemRemoveRoleReq
     ) {
-        systemRoleService.remove(roleId);
+        systemRoleService.remove(systemRemoveRoleReq.getRoleId());
         return ResultBody.ok();
     }
 
     /**
      * 角色添加成员
      *
-     * @param roleId
-     * @param userIds
      * @return
      */
     @ApiOperation(value = "角色添加成员", notes = "角色添加成员")
     @PostMapping("/role/users/save")
     public ResultBody saveUsers(
-            @RequestParam(value = "roleId") Long roleId,
-            @RequestParam(value = "userIds", required = false) String userIds
+            @RequestBody SystemRoleUserReq systemRoleUserReq
     ) {
-        systemRoleService.saveUsers(roleId, userIds);
+        systemRoleService.saveUsers(systemRoleUserReq.getRoleId(), systemRoleUserReq.getUserIds());
         return ResultBody.ok();
     }
 
@@ -191,21 +165,14 @@ public class SystemRoleController {
     /**
      * 分配角色权限
      *
-     * @param roleId       角色ID
-     * @param menuIds 权限ID.多个以,隔开
      * @return
      */
     @ApiOperation(value = "分配角色权限", notes = "分配角色权限")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "roleId", value = "角色ID", required = true, paramType = "form"),
-            @ApiImplicitParam(name = "menuIds", value = "权限ID.多个以,隔开.选填", required = true, paramType = "form")
-    })
     @PostMapping("role/grant/menu")
     public ResultBody grantRoleMenu(
-            @RequestParam(value = "roleId") Long roleId,
-            @RequestParam(value = "menuIds") String menuIds
+            @RequestBody SystemRoleGrantReq systemRoleGrantReq
     ) {
-        systemRoleService.grantRoleMenu(roleId, menuIds);
+        systemRoleService.grantRoleMenu(systemRoleGrantReq.getRoleId(), systemRoleGrantReq.getMenuIds());
         return ResultBody.ok();
     }
 }

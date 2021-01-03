@@ -89,4 +89,16 @@ public class CommonConstants {
     public static final int DEVICE_MANAGE_TYPE = 10;
 
     public static final int ADMIN_MANAGE_TYPE = 1;
+
+
+
+    /**
+     * 管理端
+     */
+
+
+    public static final String DEVICE_MANAGE_NAME = "device-manage";
+
+    public static final String ADMIN_MANAGE_NAME = "admin-manage";
+
 }

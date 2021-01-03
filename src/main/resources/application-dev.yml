@@ -1,5 +1,5 @@
 server:
-    port: 9985
+    port: 6573
 spring:
     application:
         name: iot-manage
@@ -33,7 +33,6 @@ spring:
         add-mappings: false
     profiles:
         active: dev
-#      ${profile.name}
     servlet:
         multipart:
             max-file-size: 900MB
@@ -71,7 +70,7 @@ cloud:
 #mybatis plus 设置
 mybatis-plus:
  #实体扫描，多个package用逗号或者分号分隔
-  typeAliasesPackage: com.opencloud.**.entity
+  typeAliasesPackage: com.weiqisen.**.entity
   mapperLocations: classpath:mapper/*.xml
   global-config:
     # 数据库相关配置

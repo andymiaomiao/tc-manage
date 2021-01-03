@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weiqisen.tc.mapper.SystemGenertorMapper">
+    <resultMap id="BaseResultMap" type="com.weiqisen.tc.entity.SystemGenertor">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="genertor_id" property="genertorId" jdbcType="BIGINT"/>
+        <result column="line_name" property="lineName" jdbcType="VARCHAR"/>
+        <result column="type" property="type" jdbcType="VARCHAR"/>
+        <result column="driver_name" property="driverName" jdbcType="VARCHAR"/>
+        <result column="url" property="url" jdbcType="VARCHAR"/>
+        <result column="username" property="username" jdbcType="VARCHAR"/>
+        <result column="password" property="password" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <select id="selectAuthorityByUser" resultType="com.weiqisen.tc.security.BaseAuthority">
+        SELECT
+            f.api_id as authority_id,
+            f.api_code as authority,
+            f.path as authorityPath,
+            'user' as owner
+        FROM
+            system_user_role AS up
+            INNER JOIN system_role AS a ON up.role_id = a.role_id
+            inner join system_role_menu t on a.role_id=t.role_id
+            inner join system_menu as b on t.menu_id=b.menu_id
+            inner join system_action as c on c.menu_id=b.menu_id
+            inner join system_action_api as d on c.action_id=d.action_id
+            inner join system_api as f on f.api_id=d.api_id
+        WHERE
+            up.user_id = #{userId}
+            and a.status = 1
+            and a.role_type=#{roleType}
+    </select>
+
+    <delete id="deleteActionApi">
+        delete from system_action_api where action_id = #{actionId}
+    </delete>
+</mapper>

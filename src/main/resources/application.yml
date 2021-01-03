@@ -1,29 +1,8 @@
 server:
-    port: 9985
+    port: 6573
 spring:
     application:
         name: tc
-#    cloud:
-#        sentinel:
-#            transport:
-#                dashboard: localhost:8680
-#            eager: true
-        #手动配置Bus id,
-#        bus:
-#            id: ${spring.application.name}:${server.port}
-#        nacos:
-#            config:
-#                namespace: ${config.namespace}
-#                refreshable-dataids: common.properties
-#                server-addr: ${config.server-addr}
-#                shared-dataids: common.properties,redis.properties,mqtt.yml
-#                #,device-db.properties
-#                #,db.properties,
-#                # device-db.properties,
-#                #,rabbitmq.properties
-#            discovery:
-#                namespace: ${config.namespace}
-#                server-addr: ${discovery.server-addr}
     main:
         allow-bean-definition-overriding: true
     #解决restful 404错误 spring.mvc.throw-exception-if-no-handler-found=true spring.resources.add-mappings=false
@@ -33,30 +12,25 @@ spring:
         add-mappings: false
 #    profiles:
 #        active: dev
-#      ${profile.name}
     servlet:
         multipart:
             max-file-size: 900MB
             max-request-size: 1000MB
             enabled: true
-
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
         type: com.alibaba.druid.pool.DruidDataSource
         url: jdbc:mysql://127.0.0.1:3306/tc?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true&characterEncoding=utf-8&serverTimezone=Asia/Shanghai
         username: root
         password: 123456
-
     redis:
         host: 127.0.0.1
         port: 6379
-
 management:
     endpoints:
         web:
             exposure:
                 include: '*'
-
 cloud:
     swagger2:
         enabled: true
@@ -71,7 +45,7 @@ cloud:
 #mybatis plus 设置
 mybatis-plus:
  #实体扫描，多个package用逗号或者分号分隔
-  typeAliasesPackage: com.opencloud.**.entity
+  typeAliasesPackage: com.weiqisen.**.entity
   mapperLocations: classpath:mapper/*.xml
   global-config:
     # 数据库相关配置
@@ -85,8 +59,6 @@ mybatis-plus:
 #      workerId: 1
 #      #数据标识 ID 部分(影响雪花ID)(workerId 和 datacenterId 一起配置才能重新初始化 Sequence)
 #      datacenterId: 18
-
-
 oss:
     socket:
         trace:
@@ -95,10 +67,8 @@ oss:
         save:
             host: 127.0.0.1
             port: 9223
-
 storage:
     rename: true
-
     todisk: true
     toqiniu: false
     toalioss: false
@@ -110,7 +80,7 @@ storage:
     disk:
         prefix: http://localhost:9091/files/
         downloadto: d://downloadfile//
-        location: /Users/weiqisen/java-project/upload
+        location: /Users/weiqisen/upload
     qiniu:
         prefix: http://pbby0yzdu.bkt.clouddn.com/
         ak: _IAafy8aX5x7h-4FBEvH2DqCtTq2c7sESPSlfGgI

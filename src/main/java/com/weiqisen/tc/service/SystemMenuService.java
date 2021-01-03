@@ -65,4 +65,10 @@ public interface SystemMenuService extends IBaseService<SystemMenu> {
     List<SystemMenu> findMenuByUser(Map<String, Object> paramMap);
 
     List<SystemMenu> findCustMenuByUser(Map<String, Object> paramMap);
+
+    void addMenuApi(Long menuId, String... apiIds);
+
+    void removeAuthorityMenu(Long actionId);
+
+
 }

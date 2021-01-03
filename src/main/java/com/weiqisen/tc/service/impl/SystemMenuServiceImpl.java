@@ -4,13 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.weiqisen.tc.entity.SystemMenu;
+import com.weiqisen.tc.entity.SystemMenuApi;
 import com.weiqisen.tc.exception.BaseException;
+import com.weiqisen.tc.mapper.SystemMenuApiMapper;
 import com.weiqisen.tc.mapper.SystemMenuMapper;
 import com.weiqisen.tc.model.PageParams;
 import com.weiqisen.tc.model.SystemConstants;
 import com.weiqisen.tc.mybatis.base.service.impl.BaseServiceImpl;
 import com.weiqisen.tc.service.SystemMenuService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,11 +29,8 @@ import java.util.Map;
 @Service
 @Transactional(rollbackFor = Exception.class)
 public class SystemMenuServiceImpl extends BaseServiceImpl<SystemMenuMapper, SystemMenu> implements SystemMenuService {
-//    @Autowired
-//    private SystemAuthorityService systemAuthorityService;
-//
-//    @Autowired
-//    private SystemActionService systemActionService;
+    @Autowired
+    private SystemMenuApiMapper systemMenuApiMapper;
 
     @Value("${spring.application.name}")
     private String DEFAULT_SERVICE_ID;
@@ -60,7 +60,7 @@ public class SystemMenuServiceImpl extends BaseServiceImpl<SystemMenuMapper, Sys
     public List<SystemMenu> findList(PageParams pageParams) {
         SystemMenu query = pageParams.mapToBean(SystemMenu.class);
         QueryWrapper<SystemMenu> queryWrapper = new QueryWrapper();
-        System.out.println("中饭呢哦跟首发发飞机饿哦戢国鹏" + query.getParentId());
+        System.out.println(query.getParentId());
         queryWrapper.lambda()
                 .eq(ObjectUtils.isNotEmpty(query.getMenuType()), SystemMenu::getMenuType, query.getMenuType())
                 .eq(ObjectUtils.isNotEmpty(query.getParentId()), SystemMenu::getParentId, query.getParentId())
@@ -112,6 +112,7 @@ public class SystemMenuServiceImpl extends BaseServiceImpl<SystemMenuMapper, Sys
         }
         menu.setCreateTime(new Date());
         menu.setUpdateTime(menu.getCreateTime());
+        menu.setMenuType(10);
         save(menu);
         // 同步权限表里的信息
         return menu;
@@ -157,10 +158,10 @@ public class SystemMenuServiceImpl extends BaseServiceImpl<SystemMenuMapper, Sys
      */
     @Override
     public void remove(Long menuId) {
-        SystemMenu menu = getById(menuId);
-        if (menu != null && menu.getIsPersist().equals(SystemConstants.ENABLED)) {
-            throw new BaseException(String.format("默认数据,禁止删除!"));
-        }
+//        SystemMenu menu = getById(menuId);
+//        if (menu != null && menu.getIsPersist().equals(SystemConstants.ENABLED)) {
+//            throw new BaseException(String.format("默认数据,禁止删除!"));
+//        }
 //        // 移除菜单权限
 //        systemAuthorityService.removeAuthority(menuId, ResourceType.menu);
 //        // 移除功能按钮和相关权限
@@ -190,5 +191,45 @@ public class SystemMenuServiceImpl extends BaseServiceImpl<SystemMenuMapper, Sys
         List<SystemMenu> list = baseMapper.findCustMenuByUser(paramMap);
         list.sort((SystemMenu h1, SystemMenu h2) -> h2.getPriority().compareTo(h1.getPriority()));
         return list;
+    }
+
+
+    /**
+     * 添加功能按钮权限
+     *
+     * @param menuId
+     * @param apiIds
+     * @return
+     */
+    @Override
+    public void addMenuApi(Long menuId, String... apiIds) {
+        if (menuId == null) {
+            return;
+        }
+        // 移除操作已绑定接口
+        removeAuthorityMenu(menuId);
+        if (apiIds != null && apiIds.length > 0) {
+            for (String id : apiIds) {
+                Long apiId = Long.parseLong(id);
+                SystemMenuApi systemMenuApi = new SystemMenuApi();
+                systemMenuApi.setMenuId(menuId);
+                systemMenuApi.setApiId(apiId);
+                systemMenuApi.setCreateTime(new Date());
+                systemMenuApi.setUpdateTime(systemMenuApi.getCreateTime());
+                systemMenuApiMapper.insert(systemMenuApi);
+            }
+        }
+    }
+
+    /**
+     * 移除功能按钮权限
+     *
+     * @param menuId
+     */
+    @Override
+    public void removeAuthorityMenu(Long menuId) {
+        QueryWrapper<SystemMenuApi> queryWrapper = new QueryWrapper<>();
+        queryWrapper.lambda().eq(SystemMenuApi::getMenuId,menuId);
+        systemMenuApiMapper.delete(queryWrapper);
     }
 }

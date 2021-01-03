@@ -2,6 +2,7 @@ package com.weiqisen.tc.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.weiqisen.tc.annotation.OperationLog;
+import com.weiqisen.tc.form.req.UserTokenReq;
 import com.weiqisen.tc.model.CommonConstants;
 import com.weiqisen.tc.model.ResultBody;
 import com.weiqisen.tc.security.SecurityHelper;
@@ -58,8 +59,6 @@ public class LoginController {
      * 获取用户访问令牌
      * 基于oauth2密码模式登录
      *
-     * @param username
-     * @param password
      * @return access_token
      */
     @OperationLog(value = "用户登陆")
@@ -69,8 +68,9 @@ public class LoginController {
             @ApiImplicitParam(name = "password", required = true, value = "登录密码", paramType = "form")
     })
     @PostMapping("/login/token")
-    public Object getLoginToken(@RequestParam String username, @RequestParam String password,@RequestParam(required = false) String type, @RequestHeader HttpHeaders httpHeaders) throws Exception {
-        JSONObject result = getToken(username, password, type, httpHeaders);
+    public Object getLoginToken(@RequestBody UserTokenReq userTokenReq, @RequestHeader HttpHeaders httpHeaders) throws Exception {
+        userTokenReq.setLoginType(String.valueOf(CommonConstants.DEVICE_MANAGE_TYPE));
+        JSONObject result = getToken(userTokenReq, httpHeaders);
         if (result.containsKey("access_token")) {
             return ResultBody.ok().data(result);
         } else {
@@ -99,19 +99,16 @@ public class LoginController {
     /**
      * 生成 oauth2 token
      *
-     * @param userName
-     * @param password
-     * @param type
      * @return
      */
-    public JSONObject getToken(String userName, String password, String type, HttpHeaders headers) {
+    public JSONObject getToken(@RequestBody UserTokenReq userTokenReq, HttpHeaders headers) {
         SocialClientDetails clientDetails = socialProperties.getClient().get("device");
         String url = serverConfiguration.getUrl() + "/oauth/token";
         // 使用oauth2密码模式登录.
         Map<String, String> postParameters = new LinkedHashMap<>();
-        postParameters.put("username", userName);
-        postParameters.put("password", password);
-        postParameters.put("thirdParty", type);
+        postParameters.put("username", userTokenReq.getUsername());
+        postParameters.put("password", userTokenReq.getPassword());
+        postParameters.put("thirdParty", userTokenReq.getType());
         postParameters.put("client_id", clientDetails.getClientId());
         postParameters.put("client_secret", clientDetails.getClientSecret());
         postParameters.put("grant_type", "password");

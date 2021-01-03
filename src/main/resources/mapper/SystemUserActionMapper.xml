@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.weiqisen.tc.mapper.SystemUserActionMapper">
+
+    <insert id="batchGrantUserAction">
+      insert into system_user_action(action_id,user_id)
+      select action_id,#{userId}
+      from system_action
+      <where>
+      <if test="menuIds!=null and menuIds.size()>0">
+      action_id
+      <foreach collection="menuIds" open="in (" close=")" item="item" separator=",">
+      #{item}
+      </foreach>
+      </if>
+      </where>
+    </insert>
+</mapper>

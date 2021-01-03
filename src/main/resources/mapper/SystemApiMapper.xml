@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weiqisen.tc.mapper.SystemApiMapper">
+    <select id="findApiList" resultType="com.weiqisen.tc.entity.SystemApi" parameterType="hashmap">
+        select
+        api.*
+        from
+        system_api api
+        <where>
+            <if test="status!=null">
+                AND api.status = #{status}
+            </if>
+            <if test="actionType!=null and actionType!=''">
+                AND api.api_type = #{actionType}
+            </if>
+        </where>
+        order by api.create_time desc
+    </select>
+
+    <select id="findActionList" resultType="com.weiqisen.tc.entity.SystemApi" parameterType="hashmap">
+        select
+        api.*
+        from
+        system_api api
+        inner join system_action_api b on api.api_id=b.api_id and b.action_id=#{actionId}
+        <where>
+            <if test="status!=null">
+                AND api.status = #{status}
+            </if>
+            <if test="actionType!=null and actionType!=''">
+                AND api.api_type = #{actionType}
+            </if>
+        </where>
+    </select>
+
+    <select id="findClientList" resultType="com.weiqisen.tc.entity.SystemApi" parameterType="hashmap">
+        select
+        api.*
+        from
+        system_api api
+        inner join system_client_api b on api.api_id=b.api_id and b.client_id=#{clientId}
+        <where>
+            <if test="status!=null">
+                AND api.status = #{status}
+            </if>
+            <if test="actionType!=null and actionType!=''">
+                AND api.api_type = #{actionType}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteApiAction">
+    delete from system_action_api where action_id=#{actionId}
+  </delete>
+
+    <insert id="batchUpdateServiceApi">
+        INSERT INTO system_api
+        (`api_id`,
+        `api_code`,
+        `api_name`,
+        `api_type`,
+        `api_category`,
+        `api_desc`,
+        `request_method`,
+        `content_type`,
+        `path`,
+        `priority`,
+        `status`,
+        `is_persist`,
+        `is_auth`,
+        `class_name`,
+        `method_name`,
+        `create_time`,
+        `update_time`)
+
+        <foreach collection="list" index="index" item="item" separator="union all">
+        (
+            select
+            #{item.apiId},
+            #{item.apiCode},
+            #{item.apiName},
+            #{item.apiType},
+            'default',
+            #{item.apiName},
+            #{item.requestMethod},
+            'json',
+            #{item.path},
+            0,
+            1,
+            0,
+            1,
+            #{item.className},
+            #{item.methodName},
+            now(),
+            now()
+            from dual
+            where not exists(
+            select api_id from system_api where path = #{item.path} and api_type = #{item.apiType}
+            )
+        )
+        </foreach>
+    </insert>
+
+    <select id="findMenuAllList" resultType="com.weiqisen.tc.entity.SystemApi" parameterType="hashmap">
+        select
+        api.*
+        from
+        system_api api
+        <where>
+            <if test="status!=null">
+                AND api.status = #{status}
+            </if>
+            <if test="apiType!=null and apiType!=''">
+                AND api.api_type = #{apiType}
+            </if>
+        </where>
+        order by api.create_time desc
+    </select>
+
+    <select id="findMenuGrantList" resultType="com.weiqisen.tc.entity.SystemApi" parameterType="hashmap">
+        select
+        api.*
+        from
+        system_api api
+        inner join system_menu_api b on api.api_id=b.api_id and b.menu_id=#{menuId}
+        <where>
+            <if test="status!=null">
+                AND api.status = #{status}
+            </if>
+            <if test="apiType!=null and apiType!=''">
+                AND api.api_type = #{apiType}
+            </if>
+        </where>
+    </select>
+</mapper>
