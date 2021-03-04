@@ -1,0 +1,19 @@
+version: '3'
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: tc-dockerfile
+    image: tc-manage
+    ports:
+      - 6573:6573
+    environment:
+      - DB_HOST=docker.for.mac.host.internal
+      - DB_USER=root 
+      - DB_PASSWORD=123456
+      - DB_NAME=tc
+      - REDIS_HOST=docker.for.mac.host.internal
+      - IPADDR=docker.for.mac.host.internal
+    #restart: always
+
+ 

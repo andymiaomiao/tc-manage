@@ -6,6 +6,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import com.weiqisen.tc.exception.BaseAccessDeniedHandler;
+import com.weiqisen.tc.exception.BaseAuthenticationEntryPoint;
 import com.weiqisen.tc.jackson.FastJsonSerializerFeatureCompatibleForJackson;
 import com.weiqisen.tc.jackson.SerializerFeature;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +19,16 @@ import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfiguration;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.text.SimpleDateFormat;
@@ -34,6 +43,19 @@ import java.util.TimeZone;
 @AutoConfigureBefore({JacksonAutoConfiguration.class})
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        //设置允许跨域的路径
+        registry.addMapping("/**")
+                //设置允许跨域请求的域名
+                .allowedOrigins("*")
+                //是否允许证书 不再默认开启
+                .allowCredentials(true)
+                //设置允许的方法
+                .allowedMethods("*")
+                //跨域允许时间
+                .maxAge(3600);
+    }
 
     /**
      * jacksonObjectMapper
@@ -67,7 +89,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
      * @return
      */
     @Bean
-    @ConditionalOnBean(ResourceServerConfiguration.class)
+//    @ConditionalOnBean(ResourceServerConfiguration.class)
     public HttpMessageConverters httpMessageConverters(List<HttpMessageConverter<?>> converters,ObjectMapper objectMapper) {
         MappingJackson2HttpMessageConverter jackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
         /**
@@ -85,65 +107,66 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 SerializerFeature.WriteNullBooleanAsFalse,
                 SerializerFeature.WriteNullMapAsEmpty
         };
+        log.info("String转LongString转LongString转LongString转LongString转LongString转Long");
         objectMapper.setSerializerFactory(objectMapper.getSerializerFactory().withSerializerModifier(new FastJsonSerializerFeatureCompatibleForJackson(features)));
         jackson2HttpMessageConverter.setObjectMapper(objectMapper);
         log.info("jackson2HttpMessageConverter处理(空值,Long)数据转换。注:@EnableResourceServer(资源服务器)生效。无@EnableResourceServer(普通微服务)无效", jackson2HttpMessageConverter);
         return new HttpMessageConverters(jackson2HttpMessageConverter);
     }
-//
-//    /**
-//     * 多个WebSecurityConfigurerAdapter
-//     */
-//    @Configuration
-//    @Order(101)
-//    public static class ApiWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
-//        @Override
-//        public void configure(WebSecurity web) throws Exception {
-//            web.ignoring().antMatchers(
-//                    "/error",
-//                    "/static/**",
-//                    "/v2/api-docs/**",
-//                    "/swagger-resources/**",
-//                    "/webjars/**",
-//                    "/favicon.ico")
-//                    .antMatchers("/login/**","/file/**")
-//                    .antMatchers("/v2/api-docs", "/swagger-resources/configuration/ui",
-//                            "/swagger-resources","/swagger-resources/configuration/security",
-//                            "/swagger-ui.html","/course/coursebase/**"  ,"/api/**");
-//        }
-//
-//        /**
-//         * 默认安全配置
-//         * @param http
-//         * @throws Exception
-//         */
-//        @Override
-//        public void configure(HttpSecurity http) throws Exception {
-//            http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
-//                    .and()
-//                    //为了统一异常处理。每个资源服务器都应该加上。
-//                    .exceptionHandling()
-//                    .accessDeniedHandler(new BaseAccessDeniedHandler())
-//                    .authenticationEntryPoint(new BaseAuthenticationEntryPoint())
-//                    .and()
-//                    .csrf().disable();
-//        }
-//    }
-//
-//
-//    /**
-//     * 资源处理器
-//     *
-//     * @param registry
-//     */
-//    @Override
-//    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-//        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
-//        registry.addResourceHandler("swagger-ui.html", "doc.html")
-//                .addResourceLocations("classpath:/META-INF/resources/");
-//        registry.addResourceHandler("/webjars/**")
-//                .addResourceLocations("classpath:/META-INF/resources/webjars/");
-//    }
+
+    /**
+     * 多个WebSecurityConfigurerAdapter
+     */
+    @Configuration
+    @Order(101)
+    public static class ApiWebSecurityConfiguration extends WebSecurityConfigurerAdapter {
+        @Override
+        public void configure(WebSecurity web) throws Exception {
+            web.ignoring().antMatchers(
+                    "/error",
+                    "/static/**",
+                    "/v2/api-docs/**",
+                    "/swagger-resources/**",
+                    "/webjars/**",
+                    "/favicon.ico")
+                    .antMatchers("/login/**","/file/**")
+                    .antMatchers("/v2/api-docs", "/swagger-resources/configuration/ui",
+                            "/swagger-resources","/swagger-resources/configuration/security",
+                            "/swagger-ui.html","/course/coursebase/**"  ,"/api/**");
+        }
+
+        /**
+         * 默认安全配置
+         * @param http
+         * @throws Exception
+         */
+        @Override
+        public void configure(HttpSecurity http) throws Exception {
+            http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                    .and()
+                    //为了统一异常处理。每个资源服务器都应该加上。
+                    .exceptionHandling()
+                    .accessDeniedHandler(new BaseAccessDeniedHandler())
+                    .authenticationEntryPoint(new BaseAuthenticationEntryPoint())
+                    .and()
+                    .csrf().disable();
+        }
+    }
+
+
+    /**
+     * 资源处理器
+     *
+     * @param registry
+     */
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/static/**").addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("swagger-ui.html", "doc.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
+    }
 
 
 }

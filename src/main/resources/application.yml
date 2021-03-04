@@ -10,8 +10,8 @@ spring:
         throw-exception-if-no-handler-found: true
     resources:
         add-mappings: false
-#    profiles:
-#        active: dev
+    profiles:
+        active: dev
     servlet:
         multipart:
             max-file-size: 900MB
@@ -75,8 +75,8 @@ storage:
     tofastdfs: false
     tomongodb: false
     toseaweedfs: false
-    downloadurl: http://127.0.0.1:9985/file/download/
-    imageurl: http://127.0.0.1:9985/file/image/
+    downloadurl: http://127.0.0.1:6573/file/download/
+    imageurl: http://127.0.0.1:6573/file/image/
     disk:
         prefix: http://localhost:9091/files/
         downloadto: d://downloadfile//
